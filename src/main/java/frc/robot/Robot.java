@@ -6,15 +6,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import edu.wpi.first.wpilibj.motorcontrol.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,8 +22,7 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private SpeedController eh;
- 
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -39,6 +33,13 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    CommandScheduler.getInstance().onCommandInterrupt(
+      command -> System.out.println("Command " + command.getName() + " cancelled."));
+    CommandScheduler.getInstance().onCommandInitialize(
+      command -> System.out.println("Command " + command.getName() + " initialized."));
+    CommandScheduler.getInstance().onCommandFinish(
+      command -> System.out.println("Command " + command.getName() + " finished."));
   }
 
   /**
@@ -49,7 +50,7 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() { CommandScheduler.getInstance().run();}
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -105,5 +106,5 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
-  PWMTalonSRX
+
 }
